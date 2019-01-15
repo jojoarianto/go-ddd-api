@@ -25,3 +25,13 @@ func (r *NewsRepositoryImpl) Get(id int) (*domain.News, error) {
 	}
 	return news, nil
 }
+
+// GetAll News return all domain.news
+func (r *NewsRepositoryImpl) GetAll() ([]domain.News, error) {
+	news := []domain.News{}
+	if err := r.Conn.Preload("Topic").Find(&news).Error; err != nil {
+		return nil, err
+	}
+
+	return news, nil
+}
