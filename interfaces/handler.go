@@ -9,6 +9,7 @@ import (
 
 	"github.com/jojoarianto/go-ddd-api/application"
 	"github.com/jojoarianto/go-ddd-api/config"
+	"github.com/jojoarianto/go-ddd-api/domain"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -31,6 +32,7 @@ func Routes() *httprouter.Router {
 	r.GET("/api/v1/topic/:topic_id", getTopic)
 	r.POST("/api/v1/topic", createTopic)
 	r.DELETE("/api/v1/topic/:topic_id", removeTopic)
+	r.PUT("/api/v1/topic/:topic_id", updateTopic)
 
 	// Migration Route
 	r.GET("/api/v1/migrate", migrate)
@@ -42,7 +44,6 @@ func Routes() *httprouter.Router {
 //    NEWS
 // =============================
 
-// getNews handler for handler get news by id
 func getNews(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	newsID, err := strconv.Atoi(ps.ByName("news_id"))
 	if err != nil {
@@ -59,7 +60,6 @@ func getNews(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	JSON(w, http.StatusOK, news)
 }
 
-// getAllNews handler for handler get all news
 func getAllNews(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	news, err := application.GetAllNews()
 	if err != nil {
@@ -70,7 +70,6 @@ func getAllNews(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	JSON(w, http.StatusOK, news)
 }
 
-// createNews handler for handler create news
 func createNews(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	type payload struct {
 		Title string `json:"title"`
@@ -96,7 +95,6 @@ func createNews(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 //    TOPIC
 // =============================
 
-// getTopic handler for handler get topic by id
 func getTopic(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	topicID, err := strconv.Atoi(ps.ByName("topic_id"))
 	if err != nil {
@@ -113,7 +111,6 @@ func getTopic(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	JSON(w, http.StatusOK, topic)
 }
 
-// getAllTopic handler for handler get all topics
 func getAllTopic(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	topics, err := application.GetAllTopic()
 	if err != nil {
@@ -124,7 +121,6 @@ func getAllTopic(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	JSON(w, http.StatusOK, topics)
 }
 
-// createNews handler for handler remove topic
 func createTopic(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	type payload struct {
@@ -147,7 +143,6 @@ func createTopic(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	JSON(w, http.StatusCreated, nil)
 }
 
-// removeTopic handler for handler remove topic
 func removeTopic(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	topicID, err := strconv.Atoi(ps.ByName("topic_id"))
 	if err != nil {
@@ -162,6 +157,29 @@ func removeTopic(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	JSON(w, http.StatusOK, nil)
+}
+
+func updateTopic(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	decoder := json.NewDecoder(r.Body)
+	var p domain.Topic
+	err := decoder.Decode(&p)
+	if err != nil {
+		Error(w, http.StatusNotFound, err, err.Error())
+	}
+
+	topicID, err := strconv.Atoi(ps.ByName("topic_id"))
+	if err != nil {
+		Error(w, http.StatusNotFound, err, "invalid parameter")
+		return
+	}
+
+	err = application.UpdateTopic(p, topicID)
+	if err != nil {
+		Error(w, http.StatusNotFound, err, "failed to update topic")
+		return
+	}
+
+	JSON(w, http.StatusCreated, nil)
 }
 
 // =============================

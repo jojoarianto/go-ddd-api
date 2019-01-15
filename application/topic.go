@@ -57,3 +57,17 @@ func RemoveTopic(id int) error {
 	repo := persistence.NewTopicRepositoryWithRDB(conn)
 	return repo.Remove(id)
 }
+
+// RemoveTopic do remove topic by id
+func UpdateTopic(p domain.Topic, id int) error {
+	conn, err := config.ConnectDB()
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+
+	repo := persistence.NewTopicRepositoryWithRDB(conn)
+	p.ID = uint(id)
+
+	return repo.Update(&p)
+}

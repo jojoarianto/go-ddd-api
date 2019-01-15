@@ -9,4 +9,5 @@ type TopicRepository interface {
 	GetAll() ([]domain.Topic, error)
 	Save(*domain.Topic) error
 	Remove(id int) error
+	Update(*domain.Topic) error
 }

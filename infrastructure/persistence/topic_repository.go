@@ -58,3 +58,12 @@ func (r *TopicRepositoryImpl) Remove(id int) error {
 
 	return nil
 }
+
+// Update data topic
+func (r *TopicRepositoryImpl) Update(topic *domain.Topic) error {
+	if err := r.Conn.Model(&topic).UpdateColumns(domain.Topic{Name: topic.Name, Slug: topic.Slug}).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
