@@ -23,6 +23,8 @@ func Routes() *httprouter.Router {
 
 	// News Route
 	r.GET("/api/v1/news/:news_id", getNews)
+	// Topic Route
+	r.GET("/api/v1/topic/:topic_id", getTopic)
 	// Migration Route
 	r.GET("/api/v1/migrate", migrate)
 
@@ -43,7 +45,7 @@ func getNews(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	news, err := application.GetNews(newsID)
 	if err != nil {
-		Error(w, http.StatusNotFound, err, "failed to get news")
+		Error(w, http.StatusNotFound, err, err.Error())
 		return
 	}
 
@@ -53,6 +55,23 @@ func getNews(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 // =============================
 //    TOPIC
 // =============================
+
+// Handler for get Topic by id
+func getTopic(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	topicID, err := strconv.Atoi(ps.ByName("topic_id"))
+	if err != nil {
+		Error(w, http.StatusNotFound, err, "invalid parameter")
+		return
+	}
+
+	topic, err := application.GetTopic(topicID)
+	if err != nil {
+		Error(w, http.StatusNotFound, err, "failed to get topic")
+		return
+	}
+
+	JSON(w, http.StatusOK, topic)
+}
 
 // =============================
 //    MIGRATE

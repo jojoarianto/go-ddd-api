@@ -20,7 +20,7 @@ func NewNewsRepositoryWithRDB(conn *gorm.DB) repository.NewsRepository {
 // Get news by id return domain.news
 func (r *NewsRepositoryImpl) Get(id int) (*domain.News, error) {
 	news := &domain.News{}
-	if err := r.Conn.First(&news, id).Error; err != nil {
+	if err := r.Conn.Preload("Topic").First(&news, id).Error; err != nil {
 		return nil, err
 	}
 	return news, nil
