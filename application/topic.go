@@ -45,3 +45,15 @@ func AddTopic(name string, slug string) error {
 	}
 	return repo.Save(u)
 }
+
+// RemoveTopic do remove topic by id
+func RemoveTopic(id int) error {
+	conn, err := config.ConnectDB()
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+
+	repo := persistence.NewTopicRepositoryWithRDB(conn)
+	return repo.Remove(id)
+}

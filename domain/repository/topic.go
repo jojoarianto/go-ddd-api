@@ -8,5 +8,5 @@ type TopicRepository interface {
 	Get(id int) (*domain.Topic, error)
 	GetAll() ([]domain.Topic, error)
 	Save(*domain.Topic) error
-	Remove(*domain.Topic) error
+	Remove(id int) error
 }

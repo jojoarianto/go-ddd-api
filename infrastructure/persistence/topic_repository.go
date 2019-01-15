@@ -46,6 +46,15 @@ func (r *TopicRepositoryImpl) Save(topic *domain.Topic) error {
 }
 
 // Remove delete topic
-func (r *TopicRepositoryImpl) Remove(topic *domain.Topic) error {
+func (r *TopicRepositoryImpl) Remove(id int) error {
+	topic := &domain.Topic{}
+	if err := r.Conn.First(&topic, id).Error; err != nil {
+		return err
+	}
+
+	if err := r.Conn.Delete(&topic).Error; err != nil {
+		return err
+	}
+
 	return nil
 }

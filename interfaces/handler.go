@@ -30,6 +30,8 @@ func Routes() *httprouter.Router {
 	r.GET("/api/v1/topic", getAllTopic)
 	r.GET("/api/v1/topic/:topic_id", getTopic)
 	r.POST("/api/v1/topic", createTopic)
+	r.DELETE("/api/v1/topic/:topic_id", removeTopic)
+
 	// Migration Route
 	r.GET("/api/v1/migrate", migrate)
 
@@ -122,7 +124,7 @@ func getAllTopic(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	JSON(w, http.StatusOK, topics)
 }
 
-// createNews handler for handler create news
+// createNews handler for handler remove topic
 func createTopic(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	type payload struct {
@@ -143,6 +145,23 @@ func createTopic(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	}
 
 	JSON(w, http.StatusCreated, nil)
+}
+
+// removeTopic handler for handler remove topic
+func removeTopic(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	topicID, err := strconv.Atoi(ps.ByName("topic_id"))
+	if err != nil {
+		Error(w, http.StatusNotFound, err, "invalid parameter")
+		return
+	}
+
+	err = application.RemoveTopic(topicID)
+	if err != nil {
+		Error(w, http.StatusNotFound, err, "failed to delete topic")
+		return
+	}
+
+	JSON(w, http.StatusOK, nil)
 }
 
 // =============================
