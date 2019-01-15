@@ -8,7 +8,7 @@ import (
 
 // GetUser returns user
 func GetNews(id int) (*domain.News, error) {
-	conn, err := config.NewDBConnection()
+	conn, err := config.ConnectDB()
 	if err != nil {
 		return nil, err
 	}

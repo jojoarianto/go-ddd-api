@@ -1,20 +1,22 @@
 package config
 
 import (
-	"database/sql"
 	"fmt"
 	"os"
+
+	"github.com/jinzhu/gorm"
 )
 
-// NewDBConnection returns initialized sql.DB
-func NewDBConnection() (*sql.DB, error) {
+// ConnectDB returns initialized gorm.DB
+func ConnectDB() (*gorm.DB, error) {
 	user := getEnvWithDefault("DB_USER", "")
 	password := getEnvWithDefault("DB_PASSWORD", "")
 	host := getEnvWithDefault("DB_HOST", "")
 	port := getEnvWithDefault("DB_PORT", "")
 	dbname := getEnvWithDefault("DB_NAME", "")
+
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", user, password, host, port, dbname)
-	db, err := sql.Open("mysql", dsn)
+	db, err := gorm.Open("mysql", dsn)
 	if err != nil {
 		return nil, err
 	}

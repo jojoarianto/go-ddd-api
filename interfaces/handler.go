@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/jojoarianto/go-ddd-api/application"
-
 	router "github.com/takashabe/go-router"
 )
 
