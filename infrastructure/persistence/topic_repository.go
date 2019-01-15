@@ -27,13 +27,13 @@ func (r *TopicRepositoryImpl) Get(id int) (*domain.Topic, error) {
 }
 
 // GetAll topic return all domain.topic
-func (r *TopicRepositoryImpl) GetAll() (*domain.Topic, error) {
-	// topic := &domain.Topic{}
-	// if err := r.Conn.First(&topic, id).Error; err != nil {
-	// 	return nil, err
-	// }
-	// return topic, nil
-	return nil, nil
+func (r *TopicRepositoryImpl) GetAll() ([]domain.Topic, error) {
+	topics := []domain.Topic{}
+	if err := r.Conn.Preload("News").Find(&topics).Error; err != nil {
+		return nil, err
+	}
+
+	return topics, nil
 }
 
 // Save return

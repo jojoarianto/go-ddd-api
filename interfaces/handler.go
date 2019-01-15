@@ -24,6 +24,7 @@ func Routes() *httprouter.Router {
 	// News Route
 	r.GET("/api/v1/news/:news_id", getNews)
 	// Topic Route
+	r.GET("/api/v1/topic", getAllTopic)
 	r.GET("/api/v1/topic/:topic_id", getTopic)
 	// Migration Route
 	r.GET("/api/v1/migrate", migrate)
@@ -56,7 +57,7 @@ func getNews(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 //    TOPIC
 // =============================
 
-// Handler for get Topic by id
+// getTopic handler for handler get topic by id
 func getTopic(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	topicID, err := strconv.Atoi(ps.ByName("topic_id"))
 	if err != nil {
@@ -71,6 +72,17 @@ func getTopic(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	JSON(w, http.StatusOK, topic)
+}
+
+// getAllTopic handler for handler get all topics
+func getAllTopic(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	topics, err := application.GetAllTopic()
+	if err != nil {
+		Error(w, http.StatusNotFound, err, "failed to get topics")
+		return
+	}
+
+	JSON(w, http.StatusOK, topics)
 }
 
 // =============================
