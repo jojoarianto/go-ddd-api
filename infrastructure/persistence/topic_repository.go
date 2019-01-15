@@ -36,11 +36,16 @@ func (r *TopicRepositoryImpl) GetAll() ([]domain.Topic, error) {
 	return topics, nil
 }
 
-// Save return
+// Save to add topic
 func (r *TopicRepositoryImpl) Save(topic *domain.Topic) error {
+	if err := r.Conn.Save(&topic).Error; err != nil {
+		return err
+	}
+
 	return nil
 }
 
+// Remove delete topic
 func (r *TopicRepositoryImpl) Remove(topic *domain.Topic) error {
 	return nil
 }

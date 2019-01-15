@@ -1,6 +1,7 @@
 package interfaces
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -24,9 +25,11 @@ func Routes() *httprouter.Router {
 	// News Route
 	r.GET("/api/v1/news", getAllNews)
 	r.GET("/api/v1/news/:news_id", getNews)
+	r.POST("/api/v1/news", createNews)
 	// Topic Route
 	r.GET("/api/v1/topic", getAllTopic)
 	r.GET("/api/v1/topic/:topic_id", getTopic)
+	r.POST("/api/v1/topic", createTopic)
 	// Migration Route
 	r.GET("/api/v1/migrate", migrate)
 
@@ -65,6 +68,17 @@ func getAllNews(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	JSON(w, http.StatusOK, news)
 }
 
+// createNews handler for handler create news
+func createNews(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	// news, err := application.AddTopic()
+	// if err != nil {
+	// 	Error(w, http.StatusNotFound, err, "failed to get news")
+	// 	return
+	// }
+
+	// return
+}
+
 // =============================
 //    TOPIC
 // =============================
@@ -95,6 +109,29 @@ func getAllTopic(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	}
 
 	JSON(w, http.StatusOK, topics)
+}
+
+// createNews handler for handler create news
+func createTopic(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+
+	type payload struct {
+		Name string `json:"name"`
+		Slug string `json:"slug"`
+	}
+	var p payload
+	err := json.NewDecoder(r.Body).Decode(&p)
+	if err != nil {
+		Error(w, http.StatusNotFound, err, "damn")
+		return
+	}
+
+	err = application.AddTopic(p.Name, p.Slug)
+	if err != nil {
+		Error(w, http.StatusNotFound, err, "failed to create topic")
+		return
+	}
+
+	JSON(w, http.StatusCreated, nil)
 }
 
 // =============================

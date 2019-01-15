@@ -29,3 +29,19 @@ func GetAllTopic() ([]domain.Topic, error) {
 	repo := persistence.NewTopicRepositoryWithRDB(conn)
 	return repo.GetAll()
 }
+
+// AddTopic saves new topic
+func AddTopic(name string, slug string) error {
+	conn, err := config.ConnectDB()
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+
+	repo := persistence.NewTopicRepositoryWithRDB(conn)
+	u := &domain.Topic{
+		Name: name,
+		Slug: slug,
+	}
+	return repo.Save(u)
+}
