@@ -35,3 +35,12 @@ func (r *NewsRepositoryImpl) GetAll() ([]domain.News, error) {
 
 	return news, nil
 }
+
+// Save to add news
+func (r *NewsRepositoryImpl) Save(news *domain.News) error {
+	if err := r.Conn.Save(&news).Error; err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -70,13 +70,24 @@ func getAllNews(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 // createNews handler for handler create news
 func createNews(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	// news, err := application.AddTopic()
-	// if err != nil {
-	// 	Error(w, http.StatusNotFound, err, "failed to get news")
-	// 	return
-	// }
+	type payload struct {
+		Title string `json:"title"`
+		Slug  string `json:"slug"`
+	}
+	var p payload
+	err := json.NewDecoder(r.Body).Decode(&p)
+	if err != nil {
+		Error(w, http.StatusNotFound, err, err.Error())
+		return
+	}
 
-	// return
+	err = application.AddNews(p.Title, p.Slug)
+	if err != nil {
+		Error(w, http.StatusNotFound, err, "failed to create news")
+		return
+	}
+
+	JSON(w, http.StatusCreated, nil)
 }
 
 // =============================
@@ -121,7 +132,7 @@ func createTopic(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var p payload
 	err := json.NewDecoder(r.Body).Decode(&p)
 	if err != nil {
-		Error(w, http.StatusNotFound, err, "damn")
+		Error(w, http.StatusNotFound, err, err.Error())
 		return
 	}
 

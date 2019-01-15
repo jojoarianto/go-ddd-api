@@ -29,3 +29,19 @@ func GetAllNews() ([]domain.News, error) {
 	repo := persistence.NewNewsRepositoryWithRDB(conn)
 	return repo.GetAll()
 }
+
+// AddNews saves new news
+func AddNews(title string, slug string) error {
+	conn, err := config.ConnectDB()
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+
+	repo := persistence.NewNewsRepositoryWithRDB(conn)
+	u := &domain.News{
+		Title: title,
+		Slug:  slug,
+	}
+	return repo.Save(u)
+}
