@@ -1,10 +1,13 @@
 package domain
 
-import _ "github.com/jinzhu/gorm/dialects/mysql"
+import (
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
+)
 
 // News represent entity of the news
 type News struct {
-	ID    int    `json:"id"`
+	gorm.Model
 	Title string `json:"title"`
 	Slug  string `json:"slug"`
 }

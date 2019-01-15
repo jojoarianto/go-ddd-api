@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/jojoarianto/go-ddd-api/application"
+	"github.com/jojoarianto/go-ddd-api/config"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -19,7 +20,11 @@ func Run(port int) error {
 // Routes returns the initialized router
 func Routes() *httprouter.Router {
 	r := httprouter.New()
+
+	// News Route
 	r.GET("/api/v1/news/:news_id", getNews)
+	// Migration Route
+	r.GET("/api/v1/migrate", migrate)
 
 	return r
 }
@@ -48,3 +53,18 @@ func getNews(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 // =============================
 //    TOPIC
 // =============================
+
+// =============================
+//    MIGRATE
+// =============================
+
+func migrate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	_, err := config.DBMigrate()
+	if err != nil {
+		Error(w, http.StatusNotFound, err, "failed to migrate")
+		return
+	}
+
+	msg := "Success Migrate"
+	JSON(w, http.StatusOK, msg)
+}
