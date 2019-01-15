@@ -15,9 +15,14 @@ func DBMigrate() (*gorm.DB, error) {
 	}
 	defer conn.Close()
 
-	conn.AutoMigrate(&domain.News{})
+	conn.AutoMigrate(domain.News{}, domain.Topic{})
 	log.Println("Migration has been processed")
-	// db.Model(&StockIns{}).AddForeignKey("product_id", "products(id)", "CASCADE", "CASCADE")
+
+	// conn.Model(&domain.News{}).Related(&domain.Topic{})
+
+	// Example
+	// db.Model(&language).Related(&users)
+	// SELECT * FROM "users" INNER JOIN "user_languages" ON "user_languages"."user_id" = "users"."id" WHERE  ("user_languages"."language_id" IN ('111'))
 
 	return conn, nil
 }
