@@ -44,3 +44,13 @@ func (r *NewsRepositoryImpl) Save(news *domain.News) error {
 
 	return nil
 }
+
+// Remove to delete news by id
+func (r *NewsRepositoryImpl) Remove(id int) error {
+	return nil
+}
+
+// Update is update news
+func (r *NewsRepositoryImpl) Update(news *domain.News) error {
+	return nil
+}

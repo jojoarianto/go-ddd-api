@@ -71,20 +71,15 @@ func getAllNews(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func createNews(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	type payload struct {
-		Title string `json:"title"`
-		Slug  string `json:"slug"`
-	}
-	var p payload
-	err := json.NewDecoder(r.Body).Decode(&p)
-	if err != nil {
+	decoder := json.NewDecoder(r.Body)
+	var p domain.News
+	if err := decoder.Decode(&p); err != nil {
 		Error(w, http.StatusNotFound, err, err.Error())
-		return
 	}
 
-	err = application.AddNews(p.Title, p.Slug)
+	err := application.AddNews(p)
 	if err != nil {
-		Error(w, http.StatusNotFound, err, "failed to create news")
+		Error(w, http.StatusNotFound, err, err.Error())
 		return
 	}
 

@@ -8,4 +8,6 @@ type NewsRepository interface {
 	Get(id int) (*domain.News, error)
 	GetAll() ([]domain.News, error)
 	Save(*domain.News) error
+	Remove(id int) error
+	Update(*domain.News) error
 }

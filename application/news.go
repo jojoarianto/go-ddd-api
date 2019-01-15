@@ -31,7 +31,7 @@ func GetAllNews() ([]domain.News, error) {
 }
 
 // AddNews saves new news
-func AddNews(title string, slug string) error {
+func AddNews(p domain.News) error {
 	conn, err := config.ConnectDB()
 	if err != nil {
 		return err
@@ -39,9 +39,5 @@ func AddNews(title string, slug string) error {
 	defer conn.Close()
 
 	repo := persistence.NewNewsRepositoryWithRDB(conn)
-	u := &domain.News{
-		Title: title,
-		Slug:  slug,
-	}
-	return repo.Save(u)
+	return repo.Save(&p)
 }
