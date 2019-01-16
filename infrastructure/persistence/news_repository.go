@@ -105,3 +105,23 @@ func (r *NewsRepositoryImpl) GetAllByStatus(status string) ([]domain.News, error
 
 	return news, nil
 }
+
+// GetBySlug News return all []domain.news by topic.slug
+func (r *NewsRepositoryImpl) GetBySlug(slug string) ([]*domain.News, error) {
+	rows, err := r.Conn.Raw("SELECT news.id, news.title, news.slug, news.content, news.status FROM `news_topics` LEFT JOIN news ON news_topics.news_id=news.id WHERE news_topics.topic_id=(SELECT id as topic_id FROM `topics` WHERE slug = ?)", slug).Rows() // (*sql.Rows, error)
+	defer rows.Close()
+
+	us := make([]*domain.News, 0)
+
+	for rows.Next() {
+		u := &domain.News{}
+		err = rows.Scan(&u.ID, &u.Title, &u.Slug, &u.Content, &u.Status)
+
+		if err != nil {
+			return nil, err
+		}
+		us = append(us, u)
+	}
+
+	return us, nil
+}

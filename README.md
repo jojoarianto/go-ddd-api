@@ -18,14 +18,17 @@ Set project environment and run
 ```bash
 # move to project directory
 cd $GOPATH/src/github.com/jojoarianto/go-ddd-api
+
 # set env
 export DB_USER="db_user";
 export DB_PASSWORD="db_pass";
 export DB_HOST="db_host";
 export DB_PORT="db_port";
 export DB_NAME="db_name";
+
 # run golang project
 go run main.go
+
 # API Endpoint : http://localhost:8000/api/v1/
 ```
 
@@ -81,6 +84,14 @@ go run main.go
 - `PUT` : Update a topic by id
 - `DELETE` : Delete a topic by id
 
+#### /api/v1/news?status=:status
+
+- `GET` : Get all news filter by news.status
+
+#### /api/v1/news/:topic-slug
+
+- `GET` : Get all news filter by topic
+
 ### Usage Examples
 
 Get all news, URL GET `/api/v1/news`
@@ -133,6 +144,66 @@ Create a news example, URL POST `/api/v1/news` with json
 }
 ```
 
+Get all news with filter by status=publish, URL GET `/api/v1/news?status=publish`
+
+```json
+[
+  ...
+  {
+    "ID": 2,
+    "CreatedAt": "0001-01-01T00:00:00Z",
+    "UpdatedAt": "0001-01-01T00:00:00Z",
+    "DeletedAt": null,
+    "title": "ASN Probolinggo Posting Foto Kenakan Jaket Nasdem",
+    "slug": "asn-probolinggo-posting-foto-kenakan-jaket-nasdem",
+    "content": "Tak hanya perangkat desa, sejumlah pejabat di lingkungan Pemkab Probolinggo diketahui menggunakan jaket partai Nasdem. Atribut partai tersebut dipakai dan terekam dalam postingan foto di media sosial, saat menjalani umrah di Tanah Suci Makkah-Madinah. ...",
+    "status": "publish",
+    "Topic": [
+      {
+        "ID": 3,
+        "CreatedAt": "0001-01-01T00:00:00Z",
+        "UpdatedAt": "2019-01-15T22:50:50Z",
+        "DeletedAt": null,
+        "name": "politik",
+        "slug": "politik",
+        "News": null
+      }
+    ]
+  }
+  ...
+]
+```
+
+Get all news with filter by topic, URL GET `/api/v1/news/{topic-slug}`
+
+```json
+[
+  ...
+  {
+    "ID": 11,
+    "CreatedAt": "0001-01-01T00:00:00Z",
+    "UpdatedAt": "0001-01-01T00:00:00Z",
+    "DeletedAt": null,
+    "title": "ASN Probolinggo Posting Foto Kenakan Jaket Nasdem",
+    "slug": "asn-probolinggo-posting-foto-kenakan-jaket-nasdem",
+    "content": "Tak hanya perangkat desa, sejumlah pejabat di lingkungan Pemkab Probolinggo diketahui menggunakan jaket partai Nasdem. Atribut partai tersebut dipakai dan terekam dalam postingan foto di media sosial,",
+    "status": "draft",
+    "Topic": null
+  },
+  {
+    "ID": 13,
+    "CreatedAt": "0001-01-01T00:00:00Z",
+    "UpdatedAt": "0001-01-01T00:00:00Z",
+    "DeletedAt": null,
+    "title": "Mobil Tenggelam",
+    "slug": "mobil-tenggelam",
+    "content": "dummy content berita mobil tenggelam",
+    "status": "draft",
+    "Topic": null
+  },
+  ...
+```
+
 ## Product Items Backlog
 
 - [x] **Mandatory:** Create REST API News & Topic CRUD
@@ -148,14 +219,12 @@ Create a news example, URL POST `/api/v1/news` with json
     - [x] Create
     - [x] Update
     - [x] Delete
-- [ ] **Mandatory:** Create Filter
+- [x] **Mandatory:** Create Filter
   - [x] Filter by status news
-  - [ ] Filter by topic
+  - [x] Filter by topic
 - [ ] **Mandatory:** API Functional Test
-- [ ] **Opsional:** Deploy to (heroku/aws/azure/digital ocean)
-- [ ] **Opsional:** Database setup
-  - [x] Migration schema DB
-  - [ ] Seeding DB
+- [x] **Opsional:** Deploy to (heroku/aws/azure/digital ocean)
+- [x] **Opsional:** Database setup migration schema DB
 
 ## References
 

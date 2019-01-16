@@ -79,3 +79,15 @@ func GetAllNewsByFilter(status string) ([]domain.News, error) {
 	repo := persistence.NewNewsRepositoryWithRDB(conn)
 	return repo.GetAllByStatus(status)
 }
+
+// GetNewsByTopic returns []domain.news by topic.slug
+func GetNewsByTopic(slug string) ([]*domain.News, error) {
+	conn, err := config.ConnectDB()
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+
+	repo := persistence.NewNewsRepositoryWithRDB(conn)
+	return repo.GetBySlug(slug)
+}

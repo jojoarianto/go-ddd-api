@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"regexp"
 	"strconv"
 
 	"github.com/jojoarianto/go-ddd-api/application"
@@ -12,6 +13,9 @@ import (
 	"github.com/jojoarianto/go-ddd-api/domain"
 	"github.com/julienschmidt/httprouter"
 )
+
+// IsLetter function to check string is aplhanumeric only
+var IsLetter = regexp.MustCompile(`^[a-zA-Z]+$`).MatchString
 
 // Run start server
 func Run(port int) error {
@@ -25,7 +29,7 @@ func Routes() *httprouter.Router {
 
 	// News Route
 	r.GET("/api/v1/news", getAllNews)
-	r.GET("/api/v1/news/:news_id", getNews)
+	r.GET("/api/v1/news/:param", getNews)
 	r.POST("/api/v1/news", createNews)
 	r.DELETE("/api/v1/news/:news_id", removeNews)
 	r.PUT("/api/v1/news/:news_id", updateNews)
@@ -48,12 +52,24 @@ func Routes() *httprouter.Router {
 // =============================
 
 func getNews(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	newsID, err := strconv.Atoi(ps.ByName("news_id"))
+	param := ps.ByName("param")
+
+	// if param is numeric than search by news_id, otherwise
+	// if alphabetic then search by topic.Slug
+	newsID, err := strconv.Atoi(param)
 	if err != nil {
-		Error(w, http.StatusNotFound, err, "invalid parameter")
+		// param is alphabetic
+		news, err2 := application.GetNewsByTopic(param)
+		if err2 != nil {
+			Error(w, http.StatusNotFound, err2, err2.Error())
+			return
+		}
+
+		JSON(w, http.StatusOK, news)
 		return
 	}
 
+	// param is numeric
 	news, err := application.GetNews(newsID)
 	if err != nil {
 		Error(w, http.StatusNotFound, err, err.Error())
@@ -149,13 +165,13 @@ func updateNews(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 func getTopic(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	topicID, err := strconv.Atoi(ps.ByName("topic_id"))
 	if err != nil {
-		Error(w, http.StatusNotFound, err, "invalid parameter")
+		Error(w, http.StatusNotFound, err, err.Error())
 		return
 	}
 
 	topic, err := application.GetTopic(topicID)
 	if err != nil {
-		Error(w, http.StatusNotFound, err, "failed to get topic")
+		Error(w, http.StatusNotFound, err, err.Error())
 		return
 	}
 
@@ -165,7 +181,7 @@ func getTopic(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 func getAllTopic(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	topics, err := application.GetAllTopic()
 	if err != nil {
-		Error(w, http.StatusNotFound, err, "failed to get topics")
+		Error(w, http.StatusNotFound, err, err.Error())
 		return
 	}
 
@@ -187,7 +203,7 @@ func createTopic(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	err = application.AddTopic(p.Name, p.Slug)
 	if err != nil {
-		Error(w, http.StatusNotFound, err, "failed to create topic")
+		Error(w, http.StatusNotFound, err, err.Error())
 		return
 	}
 
@@ -197,13 +213,13 @@ func createTopic(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 func removeTopic(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	topicID, err := strconv.Atoi(ps.ByName("topic_id"))
 	if err != nil {
-		Error(w, http.StatusNotFound, err, "invalid parameter")
+		Error(w, http.StatusNotFound, err, err.Error())
 		return
 	}
 
 	err = application.RemoveTopic(topicID)
 	if err != nil {
-		Error(w, http.StatusNotFound, err, "failed to delete topic")
+		Error(w, http.StatusNotFound, err, err.Error())
 		return
 	}
 
@@ -240,7 +256,7 @@ func updateTopic(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 func migrate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	_, err := config.DBMigrate()
 	if err != nil {
-		Error(w, http.StatusNotFound, err, "failed to migrate")
+		Error(w, http.StatusNotFound, err, err.Error())
 		return
 	}
 
