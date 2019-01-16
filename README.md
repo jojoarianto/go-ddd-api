@@ -135,12 +135,12 @@ Create a news example, URL POST `/api/v1/news` with json
 
 ## Product Items Backlog
 
-- [ ] **Mandatory:** create REST API News & Topic CRUD
-  - [ ] News
+- [x] **Mandatory:** create REST API News & Topic CRUD
+  - [x] News
     - [x] Get all
     - [x] Get by id
     - [x] Create
-    - [ ] Update
+    - [x] Update
     - [x] Delete
   - [x] Topic
     - [x] Get all topic

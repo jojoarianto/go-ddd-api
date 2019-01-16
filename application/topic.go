@@ -58,7 +58,7 @@ func RemoveTopic(id int) error {
 	return repo.Remove(id)
 }
 
-// RemoveTopic do remove topic by id
+// UpdateTopic do update topic by id
 func UpdateTopic(p domain.Topic, id int) error {
 	conn, err := config.ConnectDB()
 	if err != nil {

@@ -53,3 +53,17 @@ func RemoveNews(id int) error {
 	repo := persistence.NewNewsRepositoryWithRDB(conn)
 	return repo.Remove(id)
 }
+
+// UpdateNews do remove news by id
+func UpdateNews(p domain.News, id int) error {
+	conn, err := config.ConnectDB()
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+
+	repo := persistence.NewNewsRepositoryWithRDB(conn)
+	p.ID = uint(id)
+
+	return repo.Update(&p)
+}

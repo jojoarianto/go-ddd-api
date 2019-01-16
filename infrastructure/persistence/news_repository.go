@@ -80,5 +80,9 @@ func (r *NewsRepositoryImpl) Remove(id int) error {
 
 // Update is update news
 func (r *NewsRepositoryImpl) Update(news *domain.News) error {
+	if err := r.Conn.Model(&news).UpdateColumns(domain.News{Title: news.Title, Slug: news.Slug, Content: news.Content, Status: news.Status, Topic: news.Topic}).Error; err != nil {
+		return err
+	}
+
 	return nil
 }

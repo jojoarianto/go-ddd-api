@@ -28,6 +28,8 @@ func Routes() *httprouter.Router {
 	r.GET("/api/v1/news/:news_id", getNews)
 	r.POST("/api/v1/news", createNews)
 	r.DELETE("/api/v1/news/:news_id", removeNews)
+	r.PUT("/api/v1/news/:news_id", updateNews)
+
 	// Topic Route
 	r.GET("/api/v1/topic", getAllTopic)
 	r.GET("/api/v1/topic/:topic_id", getTopic)
@@ -95,6 +97,29 @@ func removeNews(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	err = application.RemoveNews(newsID)
+	if err != nil {
+		Error(w, http.StatusNotFound, err, err.Error())
+		return
+	}
+
+	JSON(w, http.StatusOK, nil)
+}
+
+func updateNews(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	decoder := json.NewDecoder(r.Body)
+	var p domain.News
+	err := decoder.Decode(&p)
+	if err != nil {
+		Error(w, http.StatusNotFound, err, err.Error())
+	}
+
+	newsID, err := strconv.Atoi(ps.ByName("news_id"))
+	if err != nil {
+		Error(w, http.StatusNotFound, err, err.Error())
+		return
+	}
+
+	err = application.UpdateNews(p, newsID)
 	if err != nil {
 		Error(w, http.StatusNotFound, err, err.Error())
 		return
@@ -181,17 +206,17 @@ func updateTopic(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	topicID, err := strconv.Atoi(ps.ByName("topic_id"))
 	if err != nil {
-		Error(w, http.StatusNotFound, err, "invalid parameter")
+		Error(w, http.StatusNotFound, err, err.Error())
 		return
 	}
 
 	err = application.UpdateTopic(p, topicID)
 	if err != nil {
-		Error(w, http.StatusNotFound, err, "failed to update topic")
+		Error(w, http.StatusNotFound, err, err.Error())
 		return
 	}
 
-	JSON(w, http.StatusCreated, nil)
+	JSON(w, http.StatusOK, nil)
 }
 
 // =============================
