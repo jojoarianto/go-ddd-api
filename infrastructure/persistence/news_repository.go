@@ -86,3 +86,22 @@ func (r *NewsRepositoryImpl) Update(news *domain.News) error {
 
 	return nil
 }
+
+// GetAll News return all domain.news
+func (r *NewsRepositoryImpl) GetAllByStatus(status string) ([]domain.News, error) {
+	if status == "deleted" {
+		news := []domain.News{}
+		if err := r.Conn.Unscoped().Where("status = ?", status).Preload("Topic").Find(&news).Error; err != nil {
+			return nil, err
+		}
+
+		return news, nil
+	}
+
+	news := []domain.News{}
+	if err := r.Conn.Where("status = ?", status).Preload("Topic").Find(&news).Error; err != nil {
+		return nil, err
+	}
+
+	return news, nil
+}

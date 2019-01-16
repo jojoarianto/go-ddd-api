@@ -64,9 +64,23 @@ func getNews(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 }
 
 func getAllNews(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	queryValues := r.URL.Query()
+	status := queryValues.Get("status")
+
+	if status == "draft" || status == "deleted" || status == "publish" {
+		news, err := application.GetAllNewsByFilter(status)
+		if err != nil {
+			Error(w, http.StatusNotFound, err, err.Error())
+			return
+		}
+
+		JSON(w, http.StatusOK, news)
+		return
+	}
+
 	news, err := application.GetAllNews()
 	if err != nil {
-		Error(w, http.StatusNotFound, err, "failed to get news")
+		Error(w, http.StatusNotFound, err, err.Error())
 		return
 	}
 

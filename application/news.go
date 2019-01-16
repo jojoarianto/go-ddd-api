@@ -67,3 +67,15 @@ func UpdateNews(p domain.News, id int) error {
 
 	return repo.Update(&p)
 }
+
+// GetAllNewsByFilter return all domain.news by filter
+func GetAllNewsByFilter(status string) ([]domain.News, error) {
+	conn, err := config.ConnectDB()
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+
+	repo := persistence.NewNewsRepositoryWithRDB(conn)
+	return repo.GetAllByStatus(status)
+}

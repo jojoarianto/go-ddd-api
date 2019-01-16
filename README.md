@@ -135,7 +135,7 @@ Create a news example, URL POST `/api/v1/news` with json
 
 ## Product Items Backlog
 
-- [x] **Mandatory:** create REST API News & Topic CRUD
+- [x] **Mandatory:** Create REST API News & Topic CRUD
   - [x] News
     - [x] Get all
     - [x] Get by id
@@ -148,8 +148,8 @@ Create a news example, URL POST `/api/v1/news` with json
     - [x] Create
     - [x] Update
     - [x] Delete
-- [ ] **Mandatory:** create Filter
-  - [ ] Filter by status news
+- [ ] **Mandatory:** Create Filter
+  - [x] Filter by status news
   - [ ] Filter by topic
 - [ ] **Mandatory:** API Functional Test
 - [ ] **Opsional:** Deploy to (heroku/aws/azure/digital ocean)
