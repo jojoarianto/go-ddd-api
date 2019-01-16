@@ -47,7 +47,35 @@ func (r *NewsRepositoryImpl) Save(news *domain.News) error {
 
 // Remove to delete news by id
 func (r *NewsRepositoryImpl) Remove(id int) error {
-	return nil
+	tx := r.Conn.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	news := domain.News{}
+	if err := tx.First(&news, id).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	news.Status = "deleted"
+	if err := tx.Save(&news).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Delete(&news).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
 }
 
 // Update is update news

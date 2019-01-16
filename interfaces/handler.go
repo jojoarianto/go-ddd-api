@@ -27,6 +27,7 @@ func Routes() *httprouter.Router {
 	r.GET("/api/v1/news", getAllNews)
 	r.GET("/api/v1/news/:news_id", getNews)
 	r.POST("/api/v1/news", createNews)
+	r.DELETE("/api/v1/news/:news_id", removeNews)
 	// Topic Route
 	r.GET("/api/v1/topic", getAllTopic)
 	r.GET("/api/v1/topic/:topic_id", getTopic)
@@ -84,6 +85,22 @@ func createNews(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	}
 
 	JSON(w, http.StatusCreated, nil)
+}
+
+func removeNews(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	newsID, err := strconv.Atoi(ps.ByName("news_id"))
+	if err != nil {
+		Error(w, http.StatusNotFound, err, err.Error())
+		return
+	}
+
+	err = application.RemoveNews(newsID)
+	if err != nil {
+		Error(w, http.StatusNotFound, err, err.Error())
+		return
+	}
+
+	JSON(w, http.StatusOK, nil)
 }
 
 // =============================

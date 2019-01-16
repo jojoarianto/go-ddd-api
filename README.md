@@ -141,23 +141,23 @@ Create a news example, URL POST `/api/v1/news` with json
     - [x] Get by id
     - [x] Create
     - [ ] Update
-    - [ ] Delete
+    - [x] Delete
   - [x] Topic
     - [x] Get all topic
     - [x] Get by id
     - [x] Create
     - [x] Update
     - [x] Delete
-- [x] **Mandatory:** create Filter
+- [ ] **Mandatory:** create Filter
   - [ ] Filter by status news
   - [ ] Filter by topic
 - [ ] **Mandatory:** API Functional Test
-- [ ] **opsional:** Deploy to (heroku/aws/azure/digital ocean)
-- [ ] **opsional:** Database setup
+- [ ] **Opsional:** Deploy to (heroku/aws/azure/digital ocean)
+- [ ] **Opsional:** Database setup
   - [x] Migration schema DB
   - [ ] Seeding DB
 
-## Reference
+## References
 
-DDD Skeleton : https://github.com/takashabe/go-ddd-sample
-GORM Documentation : http://doc.gorm.io
+- DDD Skeleton : https://github.com/takashabe/go-ddd-sample
+- GORM Documentation : http://doc.gorm.io
