@@ -2,9 +2,7 @@
 
 Kumparan Backend Technical Assessment, create REST API with domain driven approach (DDD) using Golang, GORM (Object Relational Mapping), and MySQL
 
-> Demo get all news api
-
-https://go-ddd-api.appspot.com/api/v1/news
+> Demo get all news api https://go-ddd-api.appspot.com/api/v1/news
 
 ## Installation & Run
 
@@ -39,14 +37,6 @@ go run main.go
 # API Endpoint : http://localhost:8000/api/v1/
 ```
 
-## Required Features
-
-- `Manajement news` user can manage data news (CRUD)
-- `Manajement topic` user can manage data topic (CRUD)
-- `Relational model betwean news & topic` many to many (one news can contains multiple topic, one topic has multiple news)
-- `filter by news status` filter news by it's status ['draft', 'deleted', 'publish']
-- `filter by news topic` filter news by a topic (forinstance: politik)
-
 ## Design
 
 - Application
@@ -67,6 +57,14 @@ go run main.go
 - Interfaces
   - HTTP handler
 
+## Required Features
+
+- `Manajement news` user can manage data news (CRUD)
+- `Manajement topic` user can manage data topic (CRUD)
+- `Relational model betwean news & topic` many to many (one news can contains multiple topic, one topic has multiple news)
+- `filter by news status` filter news by it's status ['draft', 'deleted', 'publish']
+- `filter by news topic` filter news by a topic (forinstance: politik)
+
 ## URL ENDPOINT
 
 #### /api/v1/news
@@ -74,7 +72,7 @@ go run main.go
 - `GET` : Get all news
 - `POST` : Create a news
 
-#### /api/v1/news/:news_id
+#### /api/v1/news/{news_id}
 
 - `GET` : Get a news by id
 - `PUT` : Update a news by id
@@ -85,17 +83,17 @@ go run main.go
 - `GET` : Get all topic
 - `POST` : Create a topic
 
-#### /api/v1/topic/:news_id
+#### /api/v1/topic/{news_id}
 
 - `GET` : Get a topic by id
 - `PUT` : Update a topic by id
 - `DELETE` : Delete a topic by id
 
-#### /api/v1/news?status=:status
+#### /api/v1/news?status={status}
 
 - `GET` : Get all news filter by news.status
 
-#### /api/v1/news/:topic-slug
+#### /api/v1/news/{topic-slug}
 
 - `GET` : Get all news filter by topic
 
@@ -103,112 +101,20 @@ go run main.go
 
 Get all news, URL GET `/api/v1/news`
 
-```json
-[
-    ...
-    {
-		"ID": 2,
-		"CreatedAt": "0001-01-01T00:00:00Z",
-		"UpdatedAt": "0001-01-01T00:00:00Z",
-		"DeletedAt": null,
-		"title": "Sebuah Mobil Terperosok ke Sungai di Kalimalang",
-		"slug": "sebuah-mobil-terperosok-ke-sungai-di-kalimalang",
-		"content": "Sebuah mobil jenis mini bus terperosok ke sungai di Kalimalang, Bekasi, ... Erna mengungkapkan, mobil ditemukan terperosok sekitar pukul ...",
-		"status": "draft",
-		"Topic": [
-            {
-            "ID": 5,
-            "CreatedAt": "0001-01-01T00:00:00Z",
-            "UpdatedAt": "2019-01-15T22:57:05Z",
-            "DeletedAt": null,
-            "name": "Berita",
-            "slug": "berita"
-            }
-        ]
-	},
-    ...
-]
+```bash
+curl -i -H "Accept: application/json" https://go-ddd-api.appspot.com/api/v1/news
 ```
 
-Create a news example, URL POST `/api/v1/news` with json
+Get all news filter by status['draft', 'publish', 'deleted'], URL GET `/api/v1/news?status={status}`
 
-```json
-{
-  "title": "Sebuah Mobil Terperosok ke Sungai di Kalimalang",
-  "slug": "sebuah-mobil-terperosok-ke-sungai-di-kalimalang",
-  "status": "draft",
-  "content": "Sebuah mobil jenis mini bus terperosok ke sungai di Kalimalang, Bekasi, ... Erna mengungkapkan, mobil ditemukan terperosok sekitar pukul ...",
-  "Topic": [
-    {
-      "ID": 5,
-      "CreatedAt": "0001-01-01T00:00:00Z",
-      "UpdatedAt": "2019-01-15T22:57:05Z",
-      "DeletedAt": null,
-      "name": "Berita",
-      "slug": "berita"
-    }
-  ]
-}
+```bash
+curl -i -H "Accept: application/json" https://go-ddd-api.appspot.com/api/v1/news?status=draft
 ```
 
-Get all news with filter by status=publish, URL GET `/api/v1/news?status=publish`
+Get all news filter by topic, URL GET `/api/v1/news/{topic-slug}`
 
-```json
-[
-  ...
-  {
-    "ID": 2,
-    "CreatedAt": "0001-01-01T00:00:00Z",
-    "UpdatedAt": "0001-01-01T00:00:00Z",
-    "DeletedAt": null,
-    "title": "ASN Probolinggo Posting Foto Kenakan Jaket Nasdem",
-    "slug": "asn-probolinggo-posting-foto-kenakan-jaket-nasdem",
-    "content": "Tak hanya perangkat desa, sejumlah pejabat di lingkungan Pemkab Probolinggo diketahui menggunakan jaket partai Nasdem. Atribut partai tersebut dipakai dan terekam dalam postingan foto di media sosial, saat menjalani umrah di Tanah Suci Makkah-Madinah. ...",
-    "status": "publish",
-    "Topic": [
-      {
-        "ID": 3,
-        "CreatedAt": "0001-01-01T00:00:00Z",
-        "UpdatedAt": "2019-01-15T22:50:50Z",
-        "DeletedAt": null,
-        "name": "politik",
-        "slug": "politik",
-        "News": null
-      }
-    ]
-  }
-  ...
-]
-```
-
-Get all news with filter by topic, URL GET `/api/v1/news/{topic-slug}`
-
-```json
-[
-  ...
-  {
-    "ID": 11,
-    "CreatedAt": "0001-01-01T00:00:00Z",
-    "UpdatedAt": "0001-01-01T00:00:00Z",
-    "DeletedAt": null,
-    "title": "ASN Probolinggo Posting Foto Kenakan Jaket Nasdem",
-    "slug": "asn-probolinggo-posting-foto-kenakan-jaket-nasdem",
-    "content": "Tak hanya perangkat desa, sejumlah pejabat di lingkungan Pemkab Probolinggo diketahui menggunakan jaket partai Nasdem. Atribut partai tersebut dipakai dan terekam dalam postingan foto di media sosial,",
-    "status": "draft",
-    "Topic": null
-  },
-  {
-    "ID": 13,
-    "CreatedAt": "0001-01-01T00:00:00Z",
-    "UpdatedAt": "0001-01-01T00:00:00Z",
-    "DeletedAt": null,
-    "title": "Mobil Tenggelam",
-    "slug": "mobil-tenggelam",
-    "content": "dummy content berita mobil tenggelam",
-    "status": "draft",
-    "Topic": null
-  },
-  ...
+```bash
+curl -i -H "Accept: application/json" https://go-ddd-api.appspot.com/api/v1/news/berita
 ```
 
 ## Product Items Backlog
