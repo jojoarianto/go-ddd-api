@@ -27,6 +27,10 @@ func Run(port int) error {
 func Routes() *httprouter.Router {
 	r := httprouter.New()
 
+	// Index Route
+	r.GET("/", index)
+	r.GET("/api/v1", index)
+
 	// News Route
 	r.GET("/api/v1/news", getAllNews)
 	r.GET("/api/v1/news/:param", getNews)
@@ -45,6 +49,10 @@ func Routes() *httprouter.Router {
 	r.GET("/api/v1/migrate", migrate)
 
 	return r
+}
+
+func index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	JSON(w, http.StatusOK, "GO DDD API")
 }
 
 // =============================

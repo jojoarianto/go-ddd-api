@@ -1,0 +1,7 @@
+# This is configuration to connect with db
+
+user="your_db_username"
+password="your_db_password"
+host="your_db_host"
+port="your_db_port"
+dbname="your_db_name"
