@@ -2,6 +2,10 @@
 
 Kumparan Backend Technical Assessment, create REST API with domain driven approach (DDD) using Golang, GORM (Object Relational Mapping), and MySQL
 
+> Demo get all news api
+
+https://go-ddd-api.appspot.com/api/v1/news
+
 ## Installation & Run
 
 First, Make sure you have set up \$GOPATH.
@@ -19,12 +23,15 @@ Set project environment and run
 # move to project directory
 cd $GOPATH/src/github.com/jojoarianto/go-ddd-api
 
-# set env
-export DB_USER="db_user";
-export DB_PASSWORD="db_pass";
-export DB_HOST="db_host";
-export DB_PORT="db_port";
-export DB_NAME="db_name";
+# copy and rename config.toml.example
+cp config.toml.example config.toml
+
+# set config.toml to your env
+user="your_db_username"
+password="your_db_password"
+host="your_db_host"
+port="your_db_port"
+dbname="your_db_name"
 
 # run golang project
 go run main.go
@@ -226,7 +233,10 @@ Get all news with filter by topic, URL GET `/api/v1/news/{topic-slug}`
 - [x] **Opsional:** Deploy to (heroku/aws/azure/digital ocean)
 - [x] **Opsional:** Database setup migration schema DB
 
-## References
+## References & Library
 
 - DDD Skeleton : https://github.com/takashabe/go-ddd-sample
+- Httprouter : https://github.com/julienschmidt/httprouter
 - GORM Documentation : http://doc.gorm.io
+- Toml : https://github.com/BurntSushi/toml
+- Deploy GoApp on GCP GAE https://medium.com/google-cloud/deploying-your-go-app-on-google-app-engine-5f4a5c2a837
