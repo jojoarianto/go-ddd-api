@@ -99,22 +99,115 @@ go run main.go
 
 ### Usage Examples
 
+> Documentation api with insomnia https://intip.in/InsomniaApiKumparanTa
+
 Get all news, URL GET `/api/v1/news`
 
 ```bash
-curl -i -H "Accept: application/json" https://go-ddd-api.appspot.com/api/v1/news
+curl --request GET \
+  --url https://go-ddd-api.appspot.com/api/v1/news
 ```
 
 Get all news filter by status['draft', 'publish', 'deleted'], URL GET `/api/v1/news?status={status}`
 
 ```bash
-curl -i -H "Accept: application/json" https://go-ddd-api.appspot.com/api/v1/news?status=draft
+curl --request GET \
+  --url https://go-ddd-api.appspot.com/api/v1/news?status=draft
 ```
 
 Get all news filter by topic, URL GET `/api/v1/news/{topic-slug}`
 
 ```bash
-curl -i -H "Accept: application/json" https://go-ddd-api.appspot.com/api/v1/news/berita
+curl --request GET \
+  --url https://go-ddd-api.appspot.com/api/v1/news/liputan-khusus
+```
+
+Get all topics
+```bash
+curl --request GET \
+  --url https://go-ddd-api.appspot.com/api/v1/topic
+```
+
+Create a topic, URL POST `/api/v1/topic`
+```bash
+curl --request POST \
+  --url https://go-ddd-api.appspot.com/api/v1/topic \
+  --header 'content-type: application/json' \
+  --data '{
+	"name":"Liputan Khusus",
+	"slug":"liputan-khusus"
+}'
+```
+
+Create a news, URL POST `/api/v1/news`
+```bash
+curl --request POST \
+  --url https://go-ddd-api.appspot.com/api/v1/news \
+  --header 'content-type: application/json' \
+  --data '{
+	"title": "Bonnie Triyana: TNI Razia Buku Upaya Desukarnoisasi",
+	"slug": "memberangus-buku-memberangus-ilmu-1547439849539914993",
+	"content": "30 November 1957, kunjungan Presiden Sukarno di Perguruan Cikini, Jakarta, atas undangan guru mendadak jadi tragedi. Hujan granat mendarat ketika ia berjalan keluar dari sekolah dua anaknya itu, Megawati Soekarnoputri dan Guruh Soekarnoputra. Dua pengawal, Oding Suhendar dan Sudiyo, merangkul Sukarno pergi menyelamatkan diri. Kedua anak Sukarno sudah lebih dulu diamankan.",
+	"status": "publish",
+	"Topic": [
+		{
+			"ID": 2,
+			"CreatedAt": "2019-01-19T03:12:32Z",
+			"UpdatedAt": "2019-01-19T03:12:32Z",
+			"DeletedAt": null,
+			"name": "Liputan Khusus",
+			"slug": "liputan-khusus",
+			"News": null
+		}
+	]
+}'
+```
+
+Delete a news, URL DELETE `/api/v1/news/2`
+```bash
+curl --request DELETE \
+  --url https://go-ddd-api.appspot.com/api/v1/news/2
+```
+
+Delete a topic, URL DELETE `/api/v1/topic/2`
+```bash
+curl --request DELETE \
+  --url https://go-ddd-api.appspot.com/api/v1/topic/3
+```
+
+Update a news, URL PUT `/api/v1/topic/2`
+```bash
+curl --request PUT \
+  --url https://go-ddd-api.appspot.com/api/v1/news/2 \
+  --header 'content-type: application/json' \
+  --data '{
+	"title": "[draft] Memberangus Buku, Memberangus Ilmu",
+	"slug": "memberangus-buku-memberangus-ilmu-1547439849539914993",
+	"content": "Buku-buku yang disita itu berjudul Kronik ‘65: Catatan Hari Per Hari Peristiwa G30S Sebelum dan Sesudahnya, Jasmerah: Pidato-pidato Spektakuler Bung Karno Sepanjang Massa, dan Mengincar Bung Besar: Tujuh Upaya Pembunuhan Bung Karno. Tak ada satu pun judul buku yang memuat kata “PKI” atau “komunis” seperti yang dituduhkan",
+	"status": "draft",
+	"Topic": [
+		{
+			"ID": 2,
+			"CreatedAt": "2019-01-19T03:12:32Z",
+			"UpdatedAt": "2019-01-19T03:12:32Z",
+			"DeletedAt": null,
+			"name": "Liputan Khusus",
+			"slug": "liputan-khusus",
+			"News": null
+		}
+	]
+}'
+```
+
+Update a topic, URL PUT `/api/v1/topic/2`
+```bash
+curl --request PUT \
+  --url https://go-ddd-api.appspot.com/api/v1/topic/3 \
+  --header 'content-type: application/json' \
+  --data '{
+	"name":"Sepak Bola Nasional",
+	"slug":"sepak-bola-national"
+}'
 ```
 
 ## Product Items Backlog
