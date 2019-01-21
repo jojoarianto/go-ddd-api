@@ -28,8 +28,7 @@ func GetAllNews(limit int, page int) ([]domain.News, error) {
 	}
 	defer conn.Close()
 
-	repo := persistence.NewNewsRepositoryWithRDB(conn)
-	news, _ := repo.GetAll()
+	var news []domain.News 
 	pagination.Pagging(&pagination.Param{
 		DB:      conn.Preload("Topic"),
 		Page:    page,
