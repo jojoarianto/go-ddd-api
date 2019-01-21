@@ -97,6 +97,10 @@ go run main.go
 
 - `GET` : Get all news filter by topic
 
+#### /api/v1/news?limit={limit}&page={page}
+
+- `GET` : Get all news with pagination limit and page
+
 ### Usage Examples
 
 > Documentation api with insomnia https://intip.in/InsomniaApiKumparanTa
@@ -120,6 +124,13 @@ Get all news filter by topic, URL GET `/api/v1/news/{topic-slug}`
 ```bash
 curl --request GET \
   --url https://go-ddd-api.appspot.com/api/v1/news/liputan-khusus
+```
+
+Get all news with pagination, URL GET `/api/v1/news?limit={limit}&page={page}`
+
+```bash
+curl --request GET \
+  --url https://go-ddd-api.appspot.com/api/v1/news?limit=2&page=1
 ```
 
 Get all topics
@@ -237,5 +248,6 @@ curl --request PUT \
 - DDD Skeleton : https://github.com/takashabe/go-ddd-sample
 - Httprouter : https://github.com/julienschmidt/httprouter
 - GORM Documentation : http://doc.gorm.io
+- GORM Pagination Extension : https://github.com/biezhi/gorm-paginator
 - Toml : https://github.com/BurntSushi/toml
 - Deploy GoApp on GCP GAE https://medium.com/google-cloud/deploying-your-go-app-on-google-app-engine-5f4a5c2a837

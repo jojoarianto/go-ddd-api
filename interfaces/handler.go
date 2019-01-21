@@ -91,6 +91,7 @@ func getAllNews(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	queryValues := r.URL.Query()
 	status := queryValues.Get("status")
 
+	// if status parameter exist draft|deleted|publish
 	if status == "draft" || status == "deleted" || status == "publish" {
 		news, err := application.GetAllNewsByFilter(status)
 		if err != nil {
@@ -102,7 +103,27 @@ func getAllNews(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		return
 	}
 
-	news, err := application.GetAllNews()
+	limit := queryValues.Get("limit")
+	page := queryValues.Get("page")
+	
+	// if custom pagination exist news?limit=15&page=2
+	if limit != "" && page != "" {
+		limit, _ := strconv.Atoi(limit)
+		page, _ := strconv.Atoi(page)
+
+		if limit != 0 && page != 0 {
+			news, err := application.GetAllNews(limit, page)
+			if err != nil {
+				Error(w, http.StatusNotFound, err, err.Error())
+				return
+			}
+	
+			JSON(w, http.StatusOK, news)
+			return
+		}
+	}
+
+	news, err := application.GetAllNews(15, 1) // 15, 1 default pagination
 	if err != nil {
 		Error(w, http.StatusNotFound, err, err.Error())
 		return

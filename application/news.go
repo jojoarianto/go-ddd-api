@@ -1,6 +1,8 @@
 package application
 
 import (
+	"github.com/biezhi/gorm-paginator/pagination"
+
 	"github.com/jojoarianto/go-ddd-api/config"
 	"github.com/jojoarianto/go-ddd-api/domain"
 	"github.com/jojoarianto/go-ddd-api/infrastructure/persistence"
@@ -19,7 +21,7 @@ func GetNews(id int) (*domain.News, error) {
 }
 
 // GetAllNews return all domain.news
-func GetAllNews() ([]domain.News, error) {
+func GetAllNews(limit int, page int) ([]domain.News, error) {
 	conn, err := config.ConnectDB()
 	if err != nil {
 		return nil, err
@@ -27,7 +29,15 @@ func GetAllNews() ([]domain.News, error) {
 	defer conn.Close()
 
 	repo := persistence.NewNewsRepositoryWithRDB(conn)
-	return repo.GetAll()
+	news, _ := repo.GetAll()
+	pagination.Pagging(&pagination.Param{
+		DB:      conn.Preload("Topic"),
+		Page:    page,
+		Limit:   limit,
+		OrderBy: []string{"id desc"},
+	}, &news)
+
+	return news, nil
 }
 
 // AddNews saves new news
