@@ -28,8 +28,8 @@ func GetAllNews(limit int, page int) ([]domain.News, error) {
 	}
 	defer conn.Close()
 
-	var news []domain.News 
-	pagination.Pagging(&pagination.Param{
+	var news []domain.News
+	pagination.Paging(&pagination.Param{
 		DB:      conn.Preload("Topic"),
 		Page:    page,
 		Limit:   limit,
